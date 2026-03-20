@@ -1,158 +1,47 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Disponibilità Giro di Bitta</title>
-<style>
-  body {
-    font-family: sans-serif;
-    background: #ffffff;
-    padding: 20px;
-    color: #333333;
-  }
+  <meta charset="UTF-8">
+  <title>Calendario Disponibilità – Giro di Bitta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  #calendar {
-    max-width: 350px;
-    margin: auto;
-  }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
 
-  .cal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 18px;
-  }
+    header {
+      background: #0b3c5d;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-  .cal-header button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #333333;
-  }
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 10px;
+    }
 
-  .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-  }
-
-  .cal-day {
-    padding: 8px;
-    text-align: center;
-    border-radius: 4px;
-    background: #a7e8d4; /* verde acqua per libero */
-  }
-
-  .occupied {
-    background: #c3543a !important; /* rosso terracotta */
-    color: white;
-  }
-
-  .empty {
-    background: #f5f5f5;
-  }
-</style>
+    iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
+
 <body>
 
-<h2 style="text-align:center;">Disponibilità</h2>
-<div id="calendar"></div>
+<header>
+  <h1>Disponibilità – Giro di Bitta</h1>
+</header>
 
-<script>
-const urls = [
-  "https://www.airbnb.it/calendar/ical/1397572352187457309.ics?t=0062ff1aa5b84383ac1b20d31c0cde85",
-  "https://ical.booking.com/v1/export?t=1753f51e-2f7c-4060-a977-e84d14c2d19d"
-];
-
-let allEvents = [];
-let monthOffset = 0;
-
-async function fetchICS(url) {
-  const res = await fetch(url);
-  return await res.text();
-}
-
-function parseICS(ics) {
-  const events = [];
-  const lines = ics.split(/\r?\n/);
-  let event = null;
-
-  for (let line of lines) {
-    if (line.startsWith("BEGIN:VEVENT")) event = {};
-    if (line.startsWith("DTSTART")) event.start = line.split(":")[1];
-    if (line.startsWith("DTEND")) event.end = line.split(":")[1];
-    if (line.startsWith("END:VEVENT")) events.push(event);
-  }
-  return events;
-}
-
-function getOccupiedDates(events) {
-  const occupied = new Set();
-  events.forEach(ev => {
-    const start = new Date(ev.start);
-    const end = new Date(ev.end);
-    for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-      occupied.add(d.toISOString().split("T")[0]);
-    }
-  });
-  return occupied;
-}
-
-async function loadEvents() {
-  for (let url of urls) {
-    const ics = await fetchICS(url);
-    allEvents = allEvents.concat(parseICS(ics));
-  }
-}
-
-function buildCalendar() {
-  const occupied = getOccupiedDates(allEvents);
-
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth() + monthOffset;
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-
-  let html = `
-    <div class="cal-header">
-      <button onclick="changeMonth(-1)">&#9664;</button>
-      <span>${firstDay.toLocaleString("it-IT", { month: "long" })} ${firstDay.getFullYear()}</span>
-      <button onclick="changeMonth(1)">&#9654;</button>
-    </div>
-    <div class="cal-grid">
-  `;
-
-  for (let i = 0; i < firstDay.getDay(); i++) {
-    html += `<div class="empty"></div>`;
-  }
-
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateStr = new Date(firstDay.getFullYear(), firstDay.getMonth(), d)
-      .toISOString()
-      .split("T")[0];
-    const isOcc = occupied.has(dateStr);
-    html += `<div class="cal-day ${isOcc ? "occupied" : ""}">${d}</div>`;
-  }
-
-  html += `</div>`;
-  document.getElementById("calendar").innerHTML = html;
-}
-
-function changeMonth(delta) {
-  monthOffset += delta;
-  buildCalendar();
-}
-
-(async function init() {
-  await loadEvents();
-  buildCalendar();
-})();
-</script>
-
-</body>
-</html>
+<main>
+  <iframe src="https://calendar.google.com/calendar/embed?src=d7a24e7eaac9006fbec24f68c9df9d822cd02039497e3fc5acd87b483dca840d%40group.calendar.google.com&ctz=Europe%2FRome" frameborder="0" scrolling="no"></iframe>
+</main>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendario Disponibilità</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FullCalendar CSS da CDNJS (compatibile GitHub Pages) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.css" integrity="sha512-+pQ0t5t8Yt6Yp6p0xJ0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #calendar { max-width: 900px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+  <h1>Disponibilità – Giro di Bitta</h1>
+  <div id="calendar"></div>
+
+  <!-- FullCalendar JS da CDNJS (compatibile GitHub Pages) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.js" integrity="sha512-+pQ0t5t8Yt6Yp6p0xJ0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xgY0j0p0J0u3x8uJt3Z7xg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        initialView: 'dayGridMonth',
+        locale: 'it',
+        firstDay: 1,
+        height: 'auto',
+        events: []
+      });
+      calendar.render();
+    });
+  </script>
+
+</body>
+</html>
